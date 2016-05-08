@@ -3,8 +3,9 @@
  */
 var app = angular.module('datePickerDemo');
 
-app.controller('tagsController', function ($scope) {
-  $scope.inputTags = [{name:"foo"},{name:"bar"}];
+app.controller('inputTagController', function ($scope) {
+  $scope.inputTags = [{name:"bar"}];
+  $scope.tagText = "";
 
   $scope.addTag = function () {
     if ($scope.tagText.length == 0) {
@@ -16,9 +17,7 @@ app.controller('tagsController', function ($scope) {
   }
 
   $scope.deleteTag = function (key) {
-    if ($scope.inputTags.length > 0 &&
-      $scope.tagText.length == 0 &&
-      key === undefined) {
+    if ($scope.inputTags.length > 0 && $scope.tagText.length == 0 && key === undefined) {
       $scope.inputTags.pop();
     } else if (key != undefined) {
       $scope.inputTags.splice(key, 1);
@@ -26,17 +25,19 @@ app.controller('tagsController', function ($scope) {
   }
 });
 
-app.directive('tagInput', function () {
+app.directive('inputTag', function () {
   return {
     restrict: 'A',
     link: function (scope, element, attrs) {
-      scope.inputWidth = 50;
+      scope.inputWidth = 60;
 
       // Watch for changes in text field
       scope.$watch(attrs.ngModel, function (value) {
         if (value != undefined) {
           var tempEl = $('<span>' + value + '</span>').appendTo('body');
-          scope.inputWidth = tempEl.width() + 5;
+          if(tempEl.width() > scope.inputWidth) {
+            scope.inputWidth = tempEl.width() + 5;
+          }
           tempEl.remove();
         }
       });
